@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.21.0",
+    "@typescript-eslint/eslint-plugin": "^8.62.1",
+    "@typescript-eslint/parser": "^8.62.1",
     "cheerio": "^1.0.0",
     "cors": "^2.8.5",
     "eslint": "^8.57.0",

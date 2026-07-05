@@ -160,7 +160,7 @@ async function fetchAIRecommendations(repoUrl, aiContainer) {
     aiContainer.innerHTML = '';
     const aiLoading = document.createElement('div');
     aiLoading.className = 'ai-loading';
-    aiLoading.innerHTML = '<div class="spinner spinner-small"></div><span>Claude is prioritizing findings...</span>';
+    aiLoading.innerHTML = '<div class="spinner spinner-small"></div><span>Gemini is prioritizing findings...</span>';
     aiContainer.appendChild(aiLoading);
 
     try {

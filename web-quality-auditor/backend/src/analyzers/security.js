@@ -1,5 +1,9 @@
 import fs from 'fs/promises';
 import path from 'path';
+import { execFile } from 'child_process';
+import util from 'util';
+
+const execFilePromise = util.promisify(execFile);
 
 export async function analyzeSecurity(projectPath) {
   const findings = [];
@@ -164,6 +168,49 @@ export async function analyzeSecurity(projectPath) {
   }
   
   await searchEnv(projectPath);
+
+  // 9. npm audit check
+  try {
+    const hasPackageJson = await fs.stat(path.join(projectPath, 'package.json')).catch(() => false);
+    if (hasPackageJson) {
+      try {
+        const { stdout } = await execFilePromise('npm', ['audit', '--json', '--audit-level=low'], { cwd: projectPath, timeout: 15000 });
+        processAuditJson(stdout);
+      } catch (err) {
+        // npm audit exits with a non-zero code if vulnerabilities are found, the JSON is in err.stdout
+        if (err.stdout) {
+          processAuditJson(err.stdout);
+        }
+      }
+      
+      function processAuditJson(jsonStr) {
+        try {
+          const audit = JSON.parse(jsonStr);
+          if (audit && audit.metadata && audit.metadata.vulnerabilities) {
+            const vulns = audit.metadata.vulnerabilities;
+            const total = vulns.info + vulns.low + vulns.moderate + vulns.high + vulns.critical;
+            
+            if (total > 0) {
+              const highOrCrit = vulns.high + vulns.critical;
+              let severity = 'low';
+              if (highOrCrit > 0) severity = 'high';
+              else if (vulns.moderate > 0) severity = 'medium';
+              
+              findings.push({
+                id: 'npm-audit-vulnerabilities',
+                severity,
+                file: 'package.json',
+                line: 0,
+                message: `Dependencies contain ${total} known vulnerabilities (Critical: ${vulns.critical}, High: ${vulns.high}, Moderate: ${vulns.moderate}, Low: ${vulns.low}). Run 'npm audit' for details.`
+              });
+            }
+          }
+        } catch(e) {}
+      }
+    }
+  } catch(e) {
+    // ignore
+  }
 
   return {
     status: 'success',

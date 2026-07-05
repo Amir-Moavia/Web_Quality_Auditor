@@ -1,13 +1,14 @@
 export function aggregateScores(analyzerResults) {
-  const { codeQuality, security, accessibility, seo, maintainability, scalability } = analyzerResults;
+  const { codeQuality, security, accessibility, seo, maintainability, scalability, performance } = analyzerResults;
   
   const totalLinesOfCode = codeQuality?.linesOfCode || 1000;
   const normalizationFactor = Math.max(1, totalLinesOfCode / 1000);
 
   const categoriesConfig = {
-    security: { weight: 0.2, data: security },
-    codeQuality: { weight: 0.2, data: codeQuality },
-    scalability: { weight: 0.2, data: scalability },
+    security: { weight: 0.15, data: security },
+    codeQuality: { weight: 0.15, data: codeQuality },
+    performance: { weight: 0.15, data: performance },
+    scalability: { weight: 0.15, data: scalability },
     accessibility: { weight: 0.15, data: accessibility },
     maintainability: { weight: 0.15, data: maintainability },
     seo: { weight: 0.1, data: seo }

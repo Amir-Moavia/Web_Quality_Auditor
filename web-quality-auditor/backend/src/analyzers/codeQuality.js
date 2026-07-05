@@ -44,11 +44,16 @@ export async function analyzeCodeQuality(projectPath) {
     useEslintrc: false,
     overrideConfig: {
       env: { browser: true, node: true, es2021: true },
-      extends: ['eslint:recommended'],
+      extends: [
+        'eslint:recommended',
+        'plugin:@typescript-eslint/recommended'
+      ],
+      parser: '@typescript-eslint/parser',
       parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'module'
       },
+      plugins: ['@typescript-eslint'],
       rules: {
         'no-console': 'warn',
         'no-unused-vars': 'warn',
@@ -59,7 +64,9 @@ export async function analyzeCodeQuality(projectPath) {
 
   const globPatterns = [
     `${projectPath}/**/*.js`, 
-    `${projectPath}/**/*.jsx`
+    `${projectPath}/**/*.jsx`,
+    `${projectPath}/**/*.ts`,
+    `${projectPath}/**/*.tsx`
   ];
 
   let results = [];
@@ -99,7 +106,7 @@ export async function analyzeCodeQuality(projectPath) {
     for (const msg of result.messages) {
       findings.push({
         rule: msg.ruleId || 'syntax-error',
-        severity: msg.severity === 2 ? 'error' : 'warning',
+        severity: msg.severity === 2 ? 'high' : 'medium',
         file: result.filePath.replace(projectPath + '/', ''),
         line: msg.line,
         message: msg.message

@@ -1,10 +1,10 @@
 import fs from 'fs/promises';
 import path from 'path';
 import escomplex from 'typhonjs-escomplex';
-import { exec } from 'child_process';
+import { execFile } from 'child_process';
 import util from 'util';
 
-const execPromise = util.promisify(exec);
+const execFilePromise = util.promisify(execFile);
 
 export async function analyzeMaintainability(projectPath) {
   const findings = [];
@@ -108,7 +108,13 @@ export async function analyzeMaintainability(projectPath) {
   
   try {
     const jscpdCmd = path.resolve(process.cwd(), 'node_modules/.bin/jscpd');
-    await execPromise(`"${jscpdCmd}" "${projectPath}" --silent --reporters json --output "${reportDir}" --ignore "**/.git/**,**/node_modules/**"`);
+    await execFilePromise(jscpdCmd, [
+      projectPath,
+      '--silent',
+      '--reporters', 'json',
+      '--output', reportDir,
+      '--ignore', '**/.git/**,**/node_modules/**'
+    ]);
   } catch(e) {
     // Exec throws if clones are found (exit code 1)
   }
