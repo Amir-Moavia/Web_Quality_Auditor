@@ -23,6 +23,12 @@ Paste any public GitHub URL → get an instant deep audit across 7 quality dimen
 
 *Analyzing a GitHub repository — showing overall score, severity breakdown, and category-level findings*
 
+<br>
+
+<img src="assets/dashboard-preview2.png" alt="AI Top Priorities - Gemini Recommendations" width="800">
+
+*Gemini AI identifies and ranks the top 5 most critical issues to fix first*
+
 </div>
 
 ---
