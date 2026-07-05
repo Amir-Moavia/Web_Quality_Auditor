@@ -15,6 +15,18 @@ Paste any public GitHub URL → get an instant deep audit across 7 quality dimen
 
 ---
 
+<div align="center">
+
+### 📸 Demo
+
+<img src="assets/dashboard-preview.png" alt="Web Quality Auditor Dashboard" width="800">
+
+*Analyzing a GitHub repository — showing overall score, severity breakdown, and category-level findings*
+
+</div>
+
+---
+
 ## ✨ Features
 
 | Feature | Description |
